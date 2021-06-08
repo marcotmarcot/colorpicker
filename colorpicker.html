@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+
+<html>
+  <body>
+    <script>
+      function toHex(d) {
+	  return ("0"+(Math.round(d).toString(16))).slice(-2).toUpperCase()
+      }
+
+      function valuesSingle(reference, left, right, pos) {
+	  switch (pos) {
+	      case 0:
+		  return {
+		      red: reference,
+		      green: left,
+		      blue: right,
+		  }
+	      case 1:
+		  return {
+		      red: left,
+		      green: reference,
+		      blue: right,
+		  }
+	      case 2:
+		  return {
+		      red: left,
+		      green: right,
+		      blue: reference,
+		  }
+	  }
+      }
+
+      function valuesDouble(reference, other, pos) {
+	  switch (pos) {
+	      case 0:
+		  return {
+		      red: other,
+		      green: reference,
+		      blue: reference,
+		  }
+	      case 1:
+		  return {
+		      red: reference,
+		      green: other,
+		      blue: reference,
+		  }
+	      case 2:
+		  return {
+		      red: reference,
+		      green: reference,
+		      blue: other,
+		  }
+	  }
+      }
+
+      function valuesTriple(reference) {
+	  return {
+	      red: reference,
+	      green: reference,
+	      blue: reference,
+	  }
+      }
+
+      function indexValues(index) {
+	  var current = 0;
+	  if (current >= index) {
+	      return valuesTriple(0);
+	  }
+	  for (var reference = 1; true; reference++) {
+	      for (var left = 0; left < reference; left++) {
+		  for (var right = 0; right < reference; right++) {
+		      for (var pos = 0; pos < 3; pos++) {
+			  current++;
+			  if (current >= index) {
+			      return valuesSingle(reference, left, right, pos);
+			  }
+		      }
+		  }
+	      }
+	      for (var other = 0; other < reference; other++) {
+		  for (var pos = 0; pos < 3; pos++) {
+		      current++;
+		      if (current >= index) {
+			  return valuesDouble(reference, other, pos);
+		      }
+		  }
+	      }
+	      current++;
+	      if (current >= index) {
+		  return valuesTriple(reference);
+	      }
+	  }
+      }
+
+      class Band {
+	  constructor(count) {
+	      this.index = 0;
+	      this.divider = 1;
+	      for (var i = 0; i < count; i++) {
+		  this.update();
+	      }
+	  }
+
+	  get() {
+	      return toHex(255.0 * this.index / this.divider);
+	  }
+
+	  update() {
+	      if (this.divider == 1) {
+		  this.index += 1;
+	      } else {
+		  this.index += 2;
+	      }
+	      if (this.index > this.divider) {
+		  this.index = 1;
+		  this.divider *= 2;
+	      }
+	  }
+      }
+
+      class Color {
+	  constructor() {
+	      this.index = 0;
+	  }
+
+	  get() {
+	      const values = indexValues(this.index);
+	      const redBand = new Band(values.red);
+	      const greenBand = new Band(values.green);
+	      const blueBand = new Band(values.blue);
+	      return '#' + redBand.get() + greenBand.get() + blueBand.get();
+	  }
+
+	  update() {
+	      this.index++;
+	  }
+      }
+
+      const color = new Color();
+      for (var i = 0; i < 100; i++) {
+	  document.write('<div style="width:50px;height:50px;background-color:' + color.get() + '"></div>');
+	  color.update();
+      }
+      </script>
+</div>
+</body>
+</html>
