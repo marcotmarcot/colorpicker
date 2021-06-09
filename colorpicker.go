@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -110,7 +111,7 @@ func processColor(color, id string, round int) (status, error) {
 		game.color = color
 		return wait, nil
 	}
-	if color == game.color {
+	if strings.ToLower(color) == strings.ToLower(game.color) {
 		game.round++
 		game.color = ""
 		return win, nil
