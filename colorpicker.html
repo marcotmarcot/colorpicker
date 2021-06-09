@@ -67,6 +67,10 @@
 	      return valuesTriple(0);
 	  }
 	  for (var reference = 1; true; reference++) {
+	      current++;
+	      if (current >= index) {
+		  return valuesTriple(reference);
+	      }
 	      for (var left = 0; left < reference; left++) {
 		  for (var right = 0; right < reference; right++) {
 		      for (var pos = 0; pos < 3; pos++) {
@@ -84,10 +88,6 @@
 			  return valuesDouble(reference, other, pos);
 		      }
 		  }
-	      }
-	      current++;
-	      if (current >= index) {
-		  return valuesTriple(reference);
 	      }
 	  }
       }
