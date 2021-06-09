@@ -262,9 +262,6 @@ func waitHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%v", err)
 		return
 	}
-	log.Print(id)
-	log.Print(games[id])
-	log.Print(games[id].round)
 	switch games[id].round {
 	case -1:
 		printLose(w, r)
